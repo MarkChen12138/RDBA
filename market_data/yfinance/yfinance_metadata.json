@@ -1,0 +1,11 @@
+{
+  "start": "2023-11-01",
+  "end": null,
+  "interval": "1d",
+  "tickers": {
+    "ZQ=F": "fed_funds_futures",
+    "^IRX": "3m_treasury_bill",
+    "^FVX": "5y_treasury_yield",
+    "^TNX": "10y_treasury_yield"
+  }
+}
