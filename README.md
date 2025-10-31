@@ -101,7 +101,7 @@ fred_target_range_lower.csv
 # Install dependencies
 pip install -r requirements.txt
 
-# Download all data sources (Polymarket + Kalshi + Yahoo Finance + GDELT)
+# Download all data sources (Polymarket + Kalshi + Yahoo Finance + GDELT + FRED)
 python fetch_data.py
 ```
 ### Set Up Environment Variables
