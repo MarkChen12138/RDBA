@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import argparse
 
-from data_sources import base, export_all, kalshi, polymarket, yfinance, gdelt
+from data_sources import base, export_all, kalshi, polymarket, yfinance, gdelt, fred
 
 
 def parse_args() -> argparse.Namespace:
@@ -75,6 +75,26 @@ Examples:
         action="store_true",
         help="Fetch from all sources (default if no specific sources are specified).",
     )
+    parser.add_argument(
+        "--fred", 
+        "-f", 
+        action="store_true", 
+        help="Fetch FRED macro series.")
+    parser.add_argument(
+        "--fred-series", 
+        type=str, 
+        help="Comma-separated FRED series ids.")
+    parser.add_argument(
+        "--fred-start", 
+        type=str, 
+        default=None, 
+        help="Observation start (YYYY-MM-DD).")
+    parser.add_argument(
+        "--fred-end", 
+        type=str, 
+        default=None, 
+        help="Observation end (YYYY-MM-DD).")
+
     
     args = parser.parse_args()
     
@@ -87,7 +107,7 @@ Examples:
         return args
     
     # If no specific sources are selected, use all
-    if not any([args.polymarket, args.kalshi, args.yfinance, args.gdelt, args.source]):
+    if not any([args.polymarket, args.kalshi, args.yfinance, args.gdelt, args.fred, args.source]):
         args.all = True
     
     if args.all:
@@ -95,6 +115,9 @@ Examples:
         args.kalshi = True
         args.yfinance = True
         args.gdelt = True
+        args.fred = True
+
+    
 
     return args
 
@@ -126,6 +149,14 @@ def main() -> None:
             yfinance.export_data()
         if args.gdelt:
             gdelt.export_data()
+        if args.fred:
+            custom = (
+                [s.strip() for s in args.fred_series.split(",")]
+                if args.fred_series else None
+            )
+            start = args.fred_start
+            fred.export_data(series=custom, start=start, end=args.fred_end)
+
 
     print("\nDone!")
 

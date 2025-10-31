@@ -1,0 +1,14 @@
+{
+  "start": null,
+  "end": null,
+  "series": [
+    "CPIAUCSL",
+    "UNRATE",
+    "GDPC1",
+    "FEDFUNDS",
+    "DGS10",
+    "DFEDTARU",
+    "DFEDTARL"
+  ],
+  "base_url": "https://api.stlouisfed.org/fred/series/observations"
+}
