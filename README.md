@@ -86,7 +86,7 @@ _All raw goes to `/data/bronze` (CSV/JSON/ZIP); cleaned analytics tables go to `
 # Install dependencies
 pip install -r requirements.txt
 
-# Download all data sources (Polymarket + Kalshi + Yahoo Finance)
+# Download all data sources (Polymarket + Kalshi + Yahoo Finance + GDELT)
 python fetch_data.py
 ```
 
@@ -97,12 +97,14 @@ python fetch_data.py
 python fetch_data.py -p          # Polymarket only
 python fetch_data.py -k          # Kalshi only
 python fetch_data.py -y          # Yahoo Finance only
+python fetch_data.py -g          # GDELT news only
 
 # Multiple sources
 python fetch_data.py -p -k       # Polymarket + Kalshi
+python fetch_data.py -g -y       # GDELT + Yahoo Finance
 
 # By source name
-python fetch_data.py --source kalshi
+python fetch_data.py --source gdelt
 
 # List all available sources
 python fetch_data.py --list
@@ -115,6 +117,7 @@ The script creates `market_data/` directory and writes CSV exports plus metadata
 - `market_data/polymarket/` - Polymarket trade data
 - `market_data/kalshi/` - Kalshi trade data
 - `market_data/yfinance/` - Yahoo Finance reference data (Treasury yields, Fed futures)
+- `market_data/gdelt/` - GDELT news articles (Federal Reserve related)
 
 ### Customizing Data Sources
 
@@ -123,18 +126,27 @@ Edit configuration constants in each data source module:
 - **Polymarket**: `data_sources/polymarket.py` - Update `EVENT_SLUG` and `MARKET_LABELS`
 - **Kalshi**: `data_sources/kalshi.py` - Update `MARKET_TICKERS`
 - **Yahoo Finance**: `data_sources/yfinance.py` - Update `TICKERS`, `DEFAULT_START`, `INTERVAL`
+- **GDELT**: `data_sources/gdelt.py` - Update `DEFAULT_QUERIES`, `DEFAULT_PARAMS` (timespan, maxrecords)
 
 ### Using in Python Code
 
 ```python
-from data_sources import kalshi, polymarket, yfinance
+from data_sources import kalshi, polymarket, yfinance, gdelt
 
 # Export from individual sources
 kalshi.export_data()
 polymarket.export_data()
 yfinance.export_data()
+gdelt.export_data()
+
+# GDELT with custom parameters
+gdelt.export_data(
+    queries={"fed_decision": '("Federal Reserve" OR FOMC OR "rate cut")'},
+    timespan="1month",
+    maxrecords=100
+)
 
 # Or use convenience function
 from data_sources import export_all
-export_all(['kalshi', 'polymarket'])
+export_all(['kalshi', 'polymarket', 'gdelt'])
 ```

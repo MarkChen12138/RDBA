@@ -7,16 +7,17 @@ Usage examples:
     python fetch_data.py -p                 # Polymarket only
     python fetch_data.py -k                 # Kalshi only
     python fetch_data.py -y                 # Yahoo Finance only
+    python fetch_data.py -g                 # GDELT news only
     python fetch_data.py -p -k              # Polymarket + Kalshi
     python fetch_data.py --list             # list available sources
-    python fetch_data.py --source kalshi    # specific source by name
+    python fetch_data.py --source gdelt     # specific source by name
 """
 
 from __future__ import annotations
 
 import argparse
 
-from data_sources import base, export_all, kalshi, polymarket, yfinance
+from data_sources import base, export_all, kalshi, polymarket, yfinance, gdelt
 
 
 def parse_args() -> argparse.Namespace:
@@ -27,7 +28,8 @@ def parse_args() -> argparse.Namespace:
 Examples:
   %(prog)s                    # Download from all sources
   %(prog)s -p -k              # Polymarket and Kalshi only
-  %(prog)s --source kalshi    # Specific source by name
+  %(prog)s -g                 # GDELT news only
+  %(prog)s --source gdelt     # Specific source by name
   %(prog)s --list             # List available sources
         """,
     )
@@ -50,10 +52,16 @@ Examples:
         help="Fetch Yahoo Finance data only.",
     )
     parser.add_argument(
+        "--gdelt",
+        "-g",
+        action="store_true",
+        help="Fetch GDELT news data only.",
+    )
+    parser.add_argument(
         "--source",
         "-s",
         type=str,
-        help="Fetch from a specific source by name (e.g., 'kalshi', 'polymarket').",
+        help="Fetch from a specific source by name (e.g., 'kalshi', 'polymarket', 'gdelt').",
     )
     parser.add_argument(
         "--list",
@@ -79,13 +87,14 @@ Examples:
         return args
     
     # If no specific sources are selected, use all
-    if not any([args.polymarket, args.kalshi, args.yfinance, args.source]):
+    if not any([args.polymarket, args.kalshi, args.yfinance, args.gdelt, args.source]):
         args.all = True
     
     if args.all:
         args.polymarket = True
         args.kalshi = True
         args.yfinance = True
+        args.gdelt = True
 
     return args
 
@@ -115,6 +124,8 @@ def main() -> None:
             kalshi.export_data()
         if args.yfinance:
             yfinance.export_data()
+        if args.gdelt:
+            gdelt.export_data()
 
     print("\nDone!")
 

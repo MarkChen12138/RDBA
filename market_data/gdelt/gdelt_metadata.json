@@ -1,0 +1,9 @@
+{
+  "fetch_timestamp": "2025-10-31T17:37:52.081855",
+  "timespan": "3months",
+  "maxrecords": 200,
+  "queries": {
+    "fed_decision": "(\"Federal Reserve\" OR FOMC OR \"rate cut\" OR \"rate hike\" OR \"interest rate\")"
+  },
+  "api_base_url": "https://api.gdeltproject.org/api/v2/doc/doc"
+}

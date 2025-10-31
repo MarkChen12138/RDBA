@@ -16,9 +16,9 @@ Usage:
 
 from __future__ import annotations
 
-from . import base, kalshi, polymarket, yfinance
+from . import base, kalshi, polymarket, yfinance, gdelt
 
-__all__ = ["base", "kalshi", "polymarket", "yfinance", "export_all", "list_sources"]
+__all__ = ["base", "kalshi", "polymarket", "yfinance", "gdelt", "export_all", "list_sources"]
 
 
 def export_all(sources: list[str] = None) -> None:
