@@ -7,15 +7,13 @@
 
 ## Team
 
-| Member                    | NetID      | Role                                                                  |
-| ------------------------- | ---------- | --------------------------------------------------------------------- |
-| **Zephyr Luo**            | **zl3152** | integration & modeling; Polymarket pipeline owner                     |
-| **<Member 2>**            | <netid>    | GDELT ETL (Events & Mentions) profiling/cleaning; news-burst features |
-| **<Member 3>**            | <netid>    | FedWatch pipeline; evaluation/calibration; meeting timeline owner     |
-| **<Member 4>**            | <netid>    | H.15/BLS/BEA ingestion; Hive/Trino schemas; data quality CI           |
-| **<Member 5> (optional)** | <netid>    | Market microstructure enrichment; streaming (Kafka/Flink)             |
+| Member                    | NetID      
+| ------------------------- | ---------- 
+| **Zephyr Luo**            | **zl3152** 
+| **<Member 2>**            | <netid>    
+| **<Member 3>**            | <netid>    
+| **<Member 4>**            | <netid>     
 
-> Replace placeholders with teammate names/NetIDs.
 
 ---
 
