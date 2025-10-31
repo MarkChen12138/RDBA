@@ -30,6 +30,18 @@ We will build a **hybrid real-time** analytics system that estimates and explain
 
 **Outputs:** a calibrated probability series, latency-to-move metrics around macro releases, and attributions of what moved the odds (rates curve shifts, CPI/NFP releases, FRED macro updates, news bursts).
 
+## Expected Insights
+
+By combining market-based expectations (Polymarket, FedWatch) with macro fundamentals (FRED, H.15, CPI) and news signals (GDELT), we aim to uncover:
+
+- How quickly and strongly markets react to new macroeconomic information.
+
+- Which indicators (e.g., CPI, unemployment, 10Y yields) most influence shifts in rate-cut expectations.
+
+- The lag between real-world data releases and market repricing (“policy anticipation gap”).
+
+- Insights useful to policy analysts, investors, and traders monitoring Fed sentiment in real time.
+
 ---
 
 ## Data Sources, Ownership, Size, and Links
