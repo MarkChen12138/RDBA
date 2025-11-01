@@ -15,7 +15,6 @@
 | **<Member 4>**            | <netid>    | 
 | **<Member 5> (optional)** | <netid>    | 
 
-> Replace placeholders with teammate names/NetIDs.
 
 ---
 
@@ -102,6 +101,12 @@ fred_target_range_lower.csv
 ---
 
 ## Software Architecture (Big Data Tools)
+
+## Design Diagram
+<img src="images/design_diagrams.png" alt="Design Diagram" width="60%">
+
+
+
 
 ---
 
