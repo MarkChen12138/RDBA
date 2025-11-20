@@ -95,6 +95,13 @@ Examples:
         default=None, 
         help="Observation end (YYYY-MM-DD).")
 
+    parser.add_argument(
+    "--fred-category",
+    type=int,
+    help="Fetch all FRED series under a given category_id (e.g., 22 = Interest Rates)."
+)
+
+
     
     args = parser.parse_args()
     
@@ -150,12 +157,22 @@ def main() -> None:
         if args.gdelt:
             gdelt.export_data()
         if args.fred:
-            custom = (
-                [s.strip() for s in args.fred_series.split(",")]
-                if args.fred_series else None
-            )
-            start = args.fred_start
-            fred.export_data(series=custom, start=start, end=args.fred_end)
+            if args.fred_category:
+                fred.export_data(
+                    category_id=args.fred_category,
+                    start=args.fred_start,
+                    end=args.fred_end
+                )
+            else:
+                custom = (
+                    [s.strip() for s in args.fred_series.split(",")]
+                    if args.fred_series else None
+                )
+                fred.export_data(
+                    series=custom,
+                    start=args.fred_start,
+                    end=args.fred_end
+                )
 
 
     print("\nDone!")
