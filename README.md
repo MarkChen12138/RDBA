@@ -7,14 +7,12 @@
 
 ## Team
 
-| Member                    | NetID      | 
-| ------------------------- | ---------- | 
-| **Zephyr Luo**            | **zl3152** | 
-| **Yushu LIU**             | **yl13841** | 
-| **<Member 3>**            | <netid>    | 
-| **<Member 4>**            | <netid>    | 
-| **<Member 5> (optional)** | <netid>    | 
-
+| Member          | NetID       |
+| --------------- | ----------- |
+| **Zephyr Luo**  | **zl3152**  |
+| **Yushu LIU**   | **yl13841** |
+| **Feifan Yang** | **fy2288**  |
+| **Mark Chen**   | **jc10691** |
 
 ---
 
@@ -22,16 +20,16 @@
 
 We will build a **hybrid real-time** analytics system that estimates and explains minute-level changes in the **December FOMC decision odds** (e.g., hold vs. cut/hike) by joining:
 
-- **Structured market probabilities** (Polymarket outcome tokens; optional WebSocket for sub-minute updates),
-- **Formal baseline probabilities** (CME **FedWatch**; futures-implied),
-- **Structured macro features**  (Treasury yields from H.15, inflation from BLS CPI and BEA PCE, and key macroeconomic indicators from FRED, including unemployment, GDP, and the effective federal funds rate),
+- **Prediction market probabilities** (Polymarket outcome tokens, Kalshi event contracts; optional WebSocket for sub-minute updates),
+- **Equity & rates market signals** (S&P 500, VIX volatility, Treasury yields, Fed futures from yfinance),
+- **Structured macro features** (FRED: CPI, unemployment, GDP, effective federal funds rate, target range),
 - **Large-scale news intensity** (GDELT Events/Mentions; 15-minute cadence).
 
-**Outputs:** a calibrated probability series, latency-to-move metrics around macro releases, and attributions of what moved the odds (rates curve shifts, CPI/NFP releases, FRED macro updates, news bursts).
+**Outputs:** a calibrated probability series, latency-to-move metrics around macro releases, and attributions of what moved the odds (prediction market shifts, equity/VIX reactions, rates curve movements, FRED macro updates, news bursts).
 
 ## Expected Insights
 
-By combining market-based expectations (Polymarket, FedWatch) with macro fundamentals (FRED, H.15, CPI) and news signals (GDELT), we aim to uncover:
+By combining prediction markets (Polymarket, Kalshi), equity/rates markets (yfinance), macro fundamentals (FRED), and news signals (GDELT), we aim to uncover:
 
 - How quickly and strongly markets react to new macroeconomic information.
 
@@ -47,15 +45,15 @@ By combining market-based expectations (Polymarket, FedWatch) with macro fundame
 
 _All raw goes to `/data/bronze` (CSV/JSON/ZIP); cleaned analytics tables go to `/data/silver` (Parquet+Snappy, UTC, partitioned); final features to `/data/gold`._
 
-| #   | Dataset (link)                                                                                                                                                                                                                                                          | What we use it for                                                                 | Cadence                                 |                 Est. size (our 4–8 week window) | Owner (MR profiling & cleaning) |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------------: | ------------------------------- |
-| 1   | **Polymarket – “Fed decision in December”**: Event page `polymarket.com/event/fed-decision-in-december`; Link=>docs.polymarket.com/developers/CLOB/timeseries; APIs: `gamma-api.polymarket.com` (market by slug) & `clob.polymarket.com` (prices-history, book, trades) | Outcome-token **price ≈ probability**; order book (spreads/depth); trades (impact) | Sec–min (poll or WS); backfill via REST | **GBs+** (book snapshots every 10–15s + trades) | **Zephyr**                      |
-| 2   | **FRED (Federal Reserve Economic Data)**: [https://fred.stlouisfed.org](https://fred.stlouisfed.org); API: `api.stlouisfed.org/fred/series/observations`                                                                                                                | Core macroeconomic indicators — CPI, unemployment, GDP, Fed funds rate, 10Y yield, and target range upper/lower limits | Daily / Monthly (series-dependent)      |                                         **MBs** | **Yushu LIU**                      |
-| 3   | **CME FedWatch – Historical (December meeting)**: `cmegroup.com/.../cme-fedwatch-tool.html` (Historical download)                                                                                                                                                       | **Formal target-range probabilities** (baseline & labels)                          | Daily                                   |                                         **MBs** | <Member 3>                      |
-| 4   | **H.15 Treasury Yields (e.g., DGS2, DGS10)**: Fed Data Download Program                                                                                                                                                                                                 | Level/slope factors (rates features)                                               | Daily                                   |                                   **10s of MB** | <Member 4>                      |
-| 5   | **BLS CPI (headline/core)**: BLS Public Data API                                                                                                                                                                                                                        | Inflation release values, release timestamps                                       | Monthly (+ schedule)                    |                                         **MBs** | <Member 4>                      |
+| #   | Dataset (link)                                                                                                                                                                                                                                                          | What we use it for                                                                                                                                                      | Cadence                                 |                 Est. size (our 4–8 week window) | Owner (MR profiling & cleaning) |
+| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------------------------------: | ------------------------------- |
+| 1   | **Polymarket – "Fed decision in December"**: Event page `polymarket.com/event/fed-decision-in-december`; Link=>docs.polymarket.com/developers/CLOB/timeseries; APIs: `gamma-api.polymarket.com` (market by slug) & `clob.polymarket.com` (prices-history, book, trades) | Outcome-token **price ≈ probability**; order book (spreads/depth); trades (impact)                                                                                      | Sec–min (poll or WS); backfill via REST | **GBs+** (book snapshots every 10–15s + trades) | **Zephyr Luo**                  |
+| 2   | **Kalshi – Fed Rate Decision Markets**: [https://kalshi.com](https://kalshi.com); API: `api.elections.kalshi.com`                                                                                                                                                       | Event-based prediction market probabilities for Fed rate decisions                                                                                                      | Real-time (REST API)                    |                                         **MBs** | **Zephyr Luo**                  |
+| 3   | **Yahoo Finance (yfinance) – S&P 500 & Macro Market Indicators**: [https://finance.yahoo.com](https://finance.yahoo.com); Python package: `yfinance`                                                                                                                    | Stock market indices (S&P 500, NASDAQ, Dow Jones), sector ETFs, VIX volatility index, Treasury yields (10Y/5Y/3M), Fed funds futures, and other equity/macro indicators | Daily / Intraday                        |                                  **100s of MB** | **Mark Chen**                   |
+| 4   | **GDELT (Global Database of Events, Language, and Tone)**: [https://www.gdeltproject.org](https://www.gdeltproject.org); API: `api.gdeltproject.org`                                                                                                                    | Large-scale news intensity and sentiment related to Federal Reserve, FOMC, rate decisions                                                                               | 15-minute cadence                       |                                         **GBs** | **Feifan Yang**                 |
+| 5   | **FRED (Federal Reserve Economic Data)**: [https://fred.stlouisfed.org](https://fred.stlouisfed.org); API: `api.stlouisfed.org/fred/series/observations`                                                                                                                | Core macroeconomic indicators — CPI, unemployment, GDP, Fed funds rate, 10Y yield, and target range upper/lower limits                                                  | Daily / Monthly (series-dependent)      |                                         **MBs** | **Yushu LIU**                   |
 
-> We will keep Polymarket as the **large, structured, directly relevant** dataset and use FedWatch/H.15/BLS/BEA as **formal, structured** context. GDELT provides **large-scale** exogenous information flow at a fixed 15-minute cadence.
+> We combine **Polymarket & Kalshi** (prediction markets) with **FRED** (macroeconomic fundamentals), **yfinance** (equity & rates markets), and **GDELT** (large-scale news signals) to create a comprehensive real-time analytics system.
 
 ---
 
@@ -69,15 +67,16 @@ _All raw goes to `/data/bronze` (CSV/JSON/ZIP); cleaned analytics tables go to `
 - `silver.polymarket_book_top(token_id STRING, ts TIMESTAMP, best_bid_price DOUBLE, best_bid_size DOUBLE, best_ask_price DOUBLE, best_ask_size DOUBLE, spread DOUBLE, dt STRING, hour STRING)`
 - `silver.polymarket_trades(ts TIMESTAMP, token_id STRING, side STRING, price DOUBLE, size DOUBLE, tx_hash STRING, dt STRING, hour STRING)`
 
-### FedWatch
+### Kalshi
 
-- `silver.fedwatch_probs(meeting STRING, date DATE, target_range_bps STRING, probability DOUBLE)`
+- `silver.kalshi_trades(ts TIMESTAMP, market_ticker STRING, side STRING, price DOUBLE, count INT, dt STRING, hour STRING)`
+- `silver.kalshi_orderbook(market_ticker STRING, ts TIMESTAMP, yes_bid DOUBLE, yes_ask DOUBLE, no_bid DOUBLE, no_ask DOUBLE, dt STRING, hour STRING)`
 
-### H.15 / CPI / PCE
+### Yahoo Finance (yfinance)
 
-- `silver.h15(series_id STRING, date DATE, value DOUBLE)`·
-- `silver.cpi(series_id STRING, release_ts TIMESTAMP, period DATE, value DOUBLE)`
-- `silver.pce(series_id STRING, release_ts TIMESTAMP, period DATE, value DOUBLE)`
+- `silver.yfinance_equity(ticker STRING, date DATE, open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, adj_close DOUBLE, volume BIGINT)`
+- `silver.yfinance_rates(ticker STRING, date DATE, close DOUBLE)` -- Treasury yields, Fed futures
+- `silver.yfinance_vix(date DATE, open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, volume BIGINT)`
 
 ### GDELT (selected fields; wide → trimmed)
 
@@ -85,9 +84,11 @@ _All raw goes to `/data/bronze` (CSV/JSON/ZIP); cleaned analytics tables go to `
 - `silver.gdelt_mentions(dt STRING, hour STRING, globaleventid BIGINT, mentionts TIMESTAMP, sourceurl STRING, ... trimmed)`
 
 ### FRED
+
 - `silver.fred(series_id STRING, date DATE, value DOUBLE, series_label STRING)`
 
 Each CSV corresponds to one macro series, e.g.:
+
 ```bash
 fred_cpi_all_items.csv
 fred_unemployment_rate.csv
@@ -103,10 +104,8 @@ fred_target_range_lower.csv
 ## Software Architecture (Big Data Tools)
 
 ## Design Diagram
+
 <img src="images/design_diagrams.png" alt="Design Diagram" width="60%">
-
-
-
 
 ---
 
@@ -121,13 +120,16 @@ pip install -r requirements.txt
 # Download all data sources (Polymarket + Kalshi + Yahoo Finance + GDELT + FRED)
 python fetch_data.py
 ```
+
 ### Set Up Environment Variables
+
 Create a file named .env in the project root (RDBA/.env):
+
 ```bash
 FRED_API_KEY=your_fred_api_key_here
 ```
-You can register for a free key here: https://fred.stlouisfed.org/docs/api/fred/
 
+You can register for a free key here: https://fred.stlouisfed.org/docs/api/fred/
 
 ### Download Specific Sources
 
@@ -158,21 +160,21 @@ python fetch_data.py --list
 
 The script creates `market_data/` directory and writes CSV exports plus metadata:
 
-- `market_data/polymarket/` - Polymarket trade data
-- `market_data/kalshi/` - Kalshi trade data
-- `market_data/yfinance/` - Yahoo Finance reference data (Treasury yields, Fed futures)
-- `market_data/gdelt/` - GDELT news articles (Federal Reserve related)
-- `market_data/fred/` - FRED macroeconomic data (CPI, unemployment, GDP, interest rates, Treasury yields, and other key economic indicators)
+- `market_data/polymarket/` - Polymarket prediction market data (trades, orderbook, probabilities)
+- `market_data/kalshi/` - Kalshi prediction market data (event contracts, trades)
+- `market_data/yfinance/` - Stock market data (S&P 500, NASDAQ, Dow Jones, VIX, sector ETFs, Treasury yields, Fed futures)
+- `market_data/gdelt/` - GDELT news articles and events (Federal Reserve, FOMC, rate decision related)
+- `market_data/fred/` - FRED macroeconomic data (CPI, unemployment, GDP, effective Fed funds rate, target range, and other key economic indicators)
 
 ### Customizing Data Sources
 
 Edit configuration constants in each data source module:
 
-- **Polymarket**: `data_sources/polymarket.py` - Update `EVENT_SLUG` and `MARKET_LABELS`
-- **Kalshi**: `data_sources/kalshi.py` - Update `MARKET_TICKERS`
-- **Yahoo Finance**: `data_sources/yfinance.py` - Update `TICKERS`, `DEFAULT_START`, `INTERVAL`
-- **GDELT**: `data_sources/gdelt.py` - Update `DEFAULT_QUERIES`, `DEFAULT_PARAMS` (timespan, maxrecords)
-- **Fred**: `data_sources/fred.py` - Update SERIES (series IDs to fetch) and .env for FRED_API_KEY; optionally adjust date range or output directory settings.
+- **Polymarket**: `data_sources/polymarket.py` - Update `EVENT_SLUG` and `MARKET_LABELS` for different Fed decision events
+- **Kalshi**: `data_sources/kalshi.py` - Update `MARKET_TICKERS` to track specific Fed rate decision contracts
+- **Yahoo Finance**: `data_sources/yfinance.py` - Update `TICKERS` to include desired equity indices (^GSPC, ^IXIC, ^DJI, ^VIX), sector ETFs (XLF, XLK, etc.), Treasury yields (^TNX, ^FVX), and Fed futures; adjust `DEFAULT_START`, `INTERVAL` for historical range and frequency
+- **GDELT**: `data_sources/gdelt.py` - Update `DEFAULT_QUERIES` with Fed/FOMC-related keywords, `DEFAULT_PARAMS` (timespan, maxrecords)
+- **FRED**: `data_sources/fred.py` - Update `SERIES` (series IDs like CPIAUCSL, UNRATE, GDPC1, FEDFUNDS) and .env for `FRED_API_KEY`; adjust date range or output directory
 
 ### Using in Python Code
 
