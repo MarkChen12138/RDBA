@@ -1,6 +1,7 @@
 #!/bin/bash
 # ============================================================
-# GDELT GB-Scale Data Fetch & Analysis Script for NYU Dataproc
+# GDELT Historical Data Fetch & Analysis Script for NYU Dataproc
+# Fetches 2 weeks of Fed/FOMC news data using startdatetime/enddatetime
 # ============================================================
 # Usage:
 #   chmod +x scripts/hpc/run_dataproc.sh
@@ -20,7 +21,7 @@ cd $PROJECT_DIR
 mkdir -p market_data/gdelt/bulk logs data/silver/gdelt data/gold/gdelt_features analysis_output
 
 echo "============================================================"
-echo "GDELT GB-Scale Data Collection & Analysis - NYU Dataproc"
+echo "GDELT 2-Week Historical Data Collection - NYU Dataproc"
 echo "Start Time: $(date)"
 echo "Project Dir: $PROJECT_DIR"
 echo "============================================================"
@@ -47,16 +48,17 @@ pip install -r requirements.txt -q
 echo "Dependencies installed."
 
 # ============================================================
-# Step 2: Fetch GB-Scale GDELT Data (6 months)
+# Step 2: Fetch GDELT Data (2 weeks)
 # ============================================================
 echo ""
-echo "[Step 2/4] Fetching GDELT Data (6 months ~ 1GB)..."
+echo "[Step 2/4] Fetching GDELT Data (2 weeks)..."
 echo "------------------------------------------------------------"
-echo "This will take several hours. Progress will be logged."
+echo "Using startdatetime/enddatetime API parameters for historical data."
+echo "This will take approximately 30-60 minutes."
 echo ""
 
 python scripts/gdelt_bulk_fetch.py \
-    --months 6 \
+    --days 14 \
     --maxrecords 250 \
     --output market_data/gdelt/bulk
 

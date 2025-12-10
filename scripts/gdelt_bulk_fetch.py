@@ -100,6 +100,10 @@ def fetch_day_batch(
     day_dir = output_dir / f"dt={date_str}"
     ensure_dir(day_dir)
 
+    # Calculate start and end of day in UTC
+    day_start = datetime(date.year, date.month, date.day, 0, 0, 0)
+    day_end = datetime(date.year, date.month, date.day, 23, 59, 59)
+
     all_articles = []
     stats = {
         "date": date_str,
@@ -113,10 +117,12 @@ def fetch_day_batch(
         logger.info(f"  [{idx}/{len(queries)}] {query_label}")
 
         try:
+            # Use startdatetime/enddatetime for historical data
             articles, req_metadata = gdelt.fetch_articles(
                 query=query_string,
-                timespan="1d",  # Full day
                 maxrecords=maxrecords,
+                start_date=day_start,
+                end_date=day_end,
             )
 
             stats["queries"][query_label] = {

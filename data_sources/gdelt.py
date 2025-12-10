@@ -144,31 +144,48 @@ def fetch_articles(
     timespan: str = "15min",
     maxrecords: int = 250,
     max_retries: int = 5,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
 ) -> Tuple[List[Dict], Dict[str, Any]]:
     """
     Fetch articles from GDELT DOC 2.0 API.
 
     Args:
         query: Search query string
-        timespan: Time range (e.g., "15min", "1h", "1d", "1w")
+        timespan: Time range (e.g., "15min", "1h", "1d", "1w") - used if start_date/end_date not provided
         maxrecords: Maximum number of records to fetch
         max_retries: Maximum number of retry attempts
+        start_date: Start datetime for historical query (UTC)
+        end_date: End datetime for historical query (UTC)
 
     Returns:
         Tuple of (articles list, request metadata dict)
+
+    Note:
+        If start_date and end_date are provided, they take precedence over timespan.
+        Date format for API: YYYYMMDDHHMMSS
     """
     params = {
         "query": query,
         "mode": DEFAULT_PARAMS["mode"],
         "maxrecords": maxrecords,
-        "timespan": timespan,
         "sort": DEFAULT_PARAMS["sort"],
         "format": DEFAULT_PARAMS["format"],
     }
 
+    # Use start_date/end_date if provided, otherwise use timespan
+    if start_date is not None and end_date is not None:
+        # Format: YYYYMMDDHHMMSS
+        params["startdatetime"] = start_date.strftime("%Y%m%d%H%M%S")
+        params["enddatetime"] = end_date.strftime("%Y%m%d%H%M%S")
+    else:
+        params["timespan"] = timespan
+
     request_metadata = {
         "query": query,
-        "timespan": timespan,
+        "timespan": timespan if start_date is None else None,
+        "start_date": start_date.isoformat() if start_date else None,
+        "end_date": end_date.isoformat() if end_date else None,
         "maxrecords": maxrecords,
         "request_timestamp": datetime.utcnow().isoformat() + "Z",
         "api_url": API_BASE_URL,
