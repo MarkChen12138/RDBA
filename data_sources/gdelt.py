@@ -40,8 +40,10 @@ GDELT API has rate limits. To avoid 429 errors:
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import os
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -206,7 +208,15 @@ def fetch_articles(
             response = requests.get(API_BASE_URL, params=params, timeout=60)
             response.raise_for_status()
 
-            data = response.json()
+            # Handle JSON parsing with invalid escape characters
+            try:
+                data = response.json()
+            except json.JSONDecodeError:
+                # GDELT sometimes returns JSON with invalid escape sequences
+                # Fix by escaping invalid backslashes
+                cleaned_text = re.sub(r'\\(?!["\\/bfnrtu])', r'\\\\', response.text)
+                data = json.loads(cleaned_text)
+
             articles = data.get("articles", [])
 
             request_metadata["status"] = "success"
