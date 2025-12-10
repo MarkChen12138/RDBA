@@ -3,3 +3,6 @@ requests
 python-dateutil
 yfinance
 python-dotenv
+pyarrow
+pytest
+pytest-cov
