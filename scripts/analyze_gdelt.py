@@ -253,16 +253,33 @@ def detect_news_shocks(df: pd.DataFrame, window_hours: int = 1) -> dict:
     if "seendate_parsed" not in df.columns:
         return {"error": "No timestamp column found"}
 
+    df = df.copy()
     df["seendate_parsed"] = pd.to_datetime(df["seendate_parsed"], errors="coerce")
     df = df.dropna(subset=["seendate_parsed"])
 
-    # Resample to hourly counts
-    df = df.set_index("seendate_parsed")
-    hourly_counts = df.resample("1H").size()
+    if df.empty:
+        return {"error": "No valid timestamps found"}
+
+    # Create hourly counts using groupby instead of resample
+    df["hour_bucket"] = df["seendate_parsed"].dt.floor("h")
+    hourly_counts = df.groupby("hour_bucket").size()
+
+    if len(hourly_counts) < 2:
+        return {"error": "Not enough data for shock detection"}
 
     # Calculate z-scores
     mean_count = hourly_counts.mean()
     std_count = hourly_counts.std()
+
+    if std_count == 0:
+        return {
+            "threshold": 2.0,
+            "mean_hourly_count": float(mean_count),
+            "std_hourly_count": 0.0,
+            "total_shocks": 0,
+            "shock_events": [],
+        }
+
     z_scores = (hourly_counts - mean_count) / std_count
 
     # Identify shocks (z-score > 2)
@@ -270,10 +287,8 @@ def detect_news_shocks(df: pd.DataFrame, window_hours: int = 1) -> dict:
 
     shock_events = []
     for timestamp, z in shocks.items():
-        # Get articles in this window
-        window_start = timestamp
-        window_end = timestamp + pd.Timedelta(hours=1)
-        window_articles = df.loc[window_start:window_end]
+        # Get articles in this hour bucket
+        window_articles = df[df["hour_bucket"] == timestamp]
 
         shock_events.append({
             "timestamp": str(timestamp),
@@ -281,6 +296,9 @@ def detect_news_shocks(df: pd.DataFrame, window_hours: int = 1) -> dict:
             "article_count": len(window_articles),
             "top_titles": window_articles["title"].head(5).tolist() if "title" in window_articles.columns else [],
         })
+
+    # Sort by z_score descending
+    shock_events = sorted(shock_events, key=lambda x: x["z_score"], reverse=True)
 
     return {
         "threshold": 2.0,
