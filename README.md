@@ -78,6 +78,13 @@ _All raw goes to `/data/bronze` (CSV/JSON/ZIP); cleaned analytics tables go to `
 - `silver.yfinance_rates(ticker STRING, date DATE, close DOUBLE)` -- Treasury yields, Fed futures
 - `silver.yfinance_vix(date DATE, open DOUBLE, high DOUBLE, low DOUBLE, close DOUBLE, volume BIGINT)`
 
+**MapReduce profiling & cleaning (Mark Chen)**
+
+- Profiling code lives in `mapreduce/yfinance_profile_mapper.py` and `mapreduce/yfinance_profile_reducer.py` (Hadoop Streaming / Python). It emits ticker-level stats such as row counts, min/max dates, average price, and missing-field counts.  
+- Cleaning/deduping logic lives in `mapreduce/yfinance_clean_mapper.py` and `mapreduce/yfinance_clean_reducer.py`, which normalize the CSVs, flag data quality issues, and deduplicate on `(ticker, date, series_label)` before writing a harmonized output schema.  
+- Re-run the jobs on the NYU Hadoop cluster using the commands in `docs/mapreduce_commands_yfinance.md`. Remember to upload the raw CSVs to HDFS and capture your shell session log for submission.  
+- A 3M treasury-bill snippet for the PDF report is staged at `docs/samples/yfinance_3m_treasury_bill_sample.csv`; do not include the full dataset in your deliverable.
+
 ### GDELT (selected fields; wide → trimmed)
 
 - `silver.gdelt_events(dt STRING, hour STRING, globaleventid BIGINT, eventcode STRING, goldsteinscale DOUBLE, nummentions INT, avgtone DOUBLE, actiongeo STRING, sourceurl STRING, ... trimmed)`

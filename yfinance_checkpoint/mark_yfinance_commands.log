@@ -1,0 +1,813 @@
+Script started on 2025-11-18 02:01:47+00:00 [TERM="xterm-256color" TTY="/dev/pts/0" COLUMNS="217" LINES="62"]
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -put -f yfinance_equity.csv            /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_rates.csv             /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_vix.csv               /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_10y_treasury_yield.csv /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_5y_treasury_yield.csv   /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_3m_treasury_bill.csv    /user/$USER/rbda/yfinance/raw/[27m
+[7mhdfs dfs -put -f yfinance_fed_funds_futures.csv   /user/$USER/rbda/yfinance/raw/[27m
+[A[A[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chdfs dfs -put -f yfinance_equity.csv            /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_rates.csv             /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_vix.csv               /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_10y_treasury_yield.csv /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_5y_treasury_yield.csv   /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_3m_treasury_bill.csv    /user/$USER/rbda/yfinance/raw/
+hdfs dfs -put -f yfinance_fed_funds_futures.csv   /user/$USER/rbda/yfinance/raw/
+[A
+[?2004l
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ 
+[?2004l[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -ls /user/$USER/rbda/yfinance/raw[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chdfs dfs -ls /user/$USER/rbda/yfinance/raw
+[?2004lFound 7 items
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      63932 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_10y_treasury_yield.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      62296 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_3m_treasury_bill.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      63665 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_5y_treasury_yield.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     628111 2025-11-18 02:01 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_equity.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      65382 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_fed_funds_futures.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     130567 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_rates.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     127217 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_vix.csv
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_profile_equity" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/profile_equity \[27m
+[7m  -files yfinance_profile_mapper.py,yfinance_profile_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_profile_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_profile_reducer.py"[27m
+[A[A[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/profile_equity \
+  -files yfinance_profile_mapper.py,yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+[A
+[?2004lJAR does not exist or is not a normal file: /usr/lib/hadoop-mapreduce/hadoop-streaming.jar
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mls /usr/lib/hadoop-mapreduce | grep streaming[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cls /usr/lib/hadoop-mapreduce | grep streaming
+[?2004l[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7m find /usr -name "hadoop-streaming*.jar"[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P find /usr -name "hadoop-streaming*.jar
+[?2004l[?2004h> "
+[?2004lfind: ‘/usr/share/polkit-1/rules.d’: Permission denied
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mfind /usr -name "hadoop-streaming*.jar" 2>/dev/null[27m
+[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cfind /usr -name "hadoop-streaming*.jar" 2>/dev/null
+[A
+[?2004l/usr/lib/hadoop/hadoop-streaming-3.3.6.jar
+/usr/lib/hadoop/hadoop-streaming.jar
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_profile_equity" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/profile_equity \[27m
+[7m  -files yfinance_profile_mapper.py,yfinance_profile_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_profile_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_profile_reducer.py"[27m
+[A[A[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/profile_equity \
+  -files yfinance_profile_mapper.py,yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+[A
+[?2004l2025-11-18 02:07:23,587 ERROR streaming.StreamJob: Unrecognized option: -files
+Usage: $HADOOP_HOME/bin/hadoop jar hadoop-streaming.jar [options]
+Options:
+  -input          <path> DFS input file(s) for the Map step.
+  -output         <path> DFS output directory for the Reduce step.
+  -mapper         <cmd|JavaClassName> Optional. Command to be run as mapper.
+  -combiner       <cmd|JavaClassName> Optional. Command to be run as combiner.
+  -reducer        <cmd|JavaClassName> Optional. Command to be run as reducer.
+  -file           <file> Optional. File/dir to be shipped in the Job jar file.
+                  Deprecated. Use generic option "-files" instead.
+  -inputformat    <TextInputFormat(default)|SequenceFileAsTextInputFormat|JavaClassName>
+                  Optional. The input format class.
+  -outputformat   <TextOutputFormat(default)|JavaClassName>
+                  Optional. The output format class.
+  -partitioner    <JavaClassName>  Optional. The partitioner class.
+  -numReduceTasks <num> Optional. Number of reduce tasks.
+  -inputreader    <spec> Optional. Input recordreader spec.
+  -cmdenv         <n>=<v> Optional. Pass env.var to streaming commands.
+  -mapdebug       <cmd> Optional. To run this script when a map task fails.
+  -reducedebug    <cmd> Optional. To run this script when a reduce task fails.
+  -io             <identifier> Optional. Format to use for input to and output
+                  from mapper/reducer commands
+  -lazyOutput     Optional. Lazily create Output.
+  -background     Optional. Submit the job and don't wait till it completes.
+  -verbose        Optional. Print verbose output.
+  -info           Optional. Print detailed usage.
+  -help           Optional. Print help message.
+
+Generic options supported are:
+-conf <configuration file>        specify an application configuration file
+-D <property=value>               define a value for a given property
+-fs <file:///|hdfs://namenode:port> specify default filesystem URL to use, overrides 'fs.defaultFS' property from configurations.
+-jt <local|resourcemanager:port>  specify a ResourceManager
+-files <file1,...>                specify a comma-separated list of files to be copied to the map reduce cluster
+-libjars <jar1,...>               specify a comma-separated list of jar files to be included in the classpath
+-archives <archive1,...>          specify a comma-separated list of archives to be unarchived on the compute machines
+
+The general command line syntax is:
+command [genericOptions] [commandOptions]
+
+
+For more details about these options:
+Use $HADOOP_HOME/bin/hadoop jar hadoop-streaming.jar -info
+
+Try -help for more information
+Streaming Command Failed!
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_equity[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_equity
+[?2004l[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_profile_equity" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/profile_equity \[27m
+[7m  -file   yfinance_profile_mapper.py \[27m
+[7m  -file   yfinance_profile_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_profile_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_profile_reducer.py"[27m[A[A[A[A[A[A[Ahadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/profile_equity \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+[?2004l2025-11-18 02:09:21,715 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_profile_mapper.py, yfinance_profile_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob12104462776113580340.jar tmpDir=null
+2025-11-18 02:09:22,756 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:09:22,948 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:09:23,772 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:09:23,773 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:09:24,046 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13533
+2025-11-18 02:09:24,457 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:09:24,515 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:09:24,701 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13533
+2025-11-18 02:09:24,701 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:09:24,920 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:09:24,920 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:09:25,038 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13533
+2025-11-18 02:09:25,085 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13533/
+2025-11-18 02:09:25,086 INFO mapreduce.Job: Running job: job_1756163132607_13533
+2025-11-18 02:09:35,205 INFO mapreduce.Job: Job job_1756163132607_13533 running in uber mode : false
+2025-11-18 02:09:35,206 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:09:47,329 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:09:54,378 INFO mapreduce.Job:  map 100% reduce 50%
+2025-11-18 02:09:57,396 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:09:58,411 INFO mapreduce.Job: Job job_1756163132607_13533 completed successfully
+2025-11-18 02:09:58,520 INFO mapreduce.Job: Counters: 55
+	File System Counters
+		FILE: Number of bytes read=285450
+		FILE: Number of bytes written=2915618
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=649383
+		HDFS: Number of bytes written=659
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Killed reduce tasks=1
+		Launched map tasks=6
+		Launched reduce tasks=3
+		Rack-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=237476
+		Total time spent by all reduces in occupied slots (ms)=46980
+		Total time spent by all map tasks (ms)=59369
+		Total time spent by all reduce tasks (ms)=11745
+		Total vcore-milliseconds taken by all map tasks=59369
+		Total vcore-milliseconds taken by all reduce tasks=11745
+		Total megabyte-milliseconds taken by all map tasks=243175424
+		Total megabyte-milliseconds taken by all reduce tasks=48107520
+	Map-Reduce Framework
+		Map input records=5001
+		Map output records=842
+		Map output bytes=282070
+		Map output materialized bytes=285510
+		Input split bytes=792
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=2
+		Reduce shuffle bytes=285510
+		Reduce input records=842
+		Reduce output records=2
+		Spilled Records=1684
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=822
+		CPU time spent (ms)=10340
+		Physical memory (bytes) snapshot=4993757184
+		Virtual memory (bytes) snapshot=40024240128
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=709316608
+		Peak Map Virtual memory (bytes)=5010337792
+		Peak Reduce Physical memory (bytes)=465162240
+		Peak Reduce Virtual memory (bytes)=5022863360
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=648591
+	File Output Format Counters 
+		Bytes Written=659
+2025-11-18 02:09:58,520 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/profile_equity
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_rates[27m
+[7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_profile_rates" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/profile_rates \[27m
+[7m  -file   yfinance_profile_mapper.py \[27m
+[7m  -file   yfinance_profile_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_profile_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_profile_reducer.py"[27m[A[A[A[A[A[A[A[Ahdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_rates
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_rates" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \
+  -output /user/$USER/rbda/yfinance/profile_rates \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+[?2004l2025-11-18 02:10:47,415 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_profile_mapper.py, yfinance_profile_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob14203910342473031819.jar tmpDir=null
+2025-11-18 02:10:48,430 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:10:48,638 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:10:49,497 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:10:49,498 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:10:49,766 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13534
+2025-11-18 02:10:50,177 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:10:50,236 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:10:50,408 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13534
+2025-11-18 02:10:50,408 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:10:50,617 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:10:50,617 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:10:50,685 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13534
+2025-11-18 02:10:50,721 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13534/
+2025-11-18 02:10:50,723 INFO mapreduce.Job: Running job: job_1756163132607_13534
+2025-11-18 02:10:59,837 INFO mapreduce.Job: Job job_1756163132607_13534 running in uber mode : false
+2025-11-18 02:10:59,839 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:11:10,011 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:11:16,053 INFO mapreduce.Job:  map 100% reduce 50%
+2025-11-18 02:11:17,059 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:11:18,077 INFO mapreduce.Job: Job job_1756163132607_13534 completed successfully
+2025-11-18 02:11:18,187 INFO mapreduce.Job: Counters: 55
+	File System Counters
+		FILE: Number of bytes read=137279
+		FILE: Number of bytes written=2619252
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=151833
+		HDFS: Number of bytes written=311
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Killed map tasks=1
+		Launched map tasks=6
+		Launched reduce tasks=2
+		Rack-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=181324
+		Total time spent by all reduces in occupied slots (ms)=35632
+		Total time spent by all map tasks (ms)=45331
+		Total time spent by all reduce tasks (ms)=8908
+		Total vcore-milliseconds taken by all map tasks=45331
+		Total vcore-milliseconds taken by all reduce tasks=8908
+		Total megabyte-milliseconds taken by all map tasks=185675776
+		Total megabyte-milliseconds taken by all reduce tasks=36487168
+	Map-Reduce Framework
+		Map input records=2504
+		Map output records=419
+		Map output bytes=135591
+		Map output materialized bytes=137339
+		Input split bytes=786
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=1
+		Reduce shuffle bytes=137339
+		Reduce input records=419
+		Reduce output records=1
+		Spilled Records=838
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=602
+		CPU time spent (ms)=9820
+		Physical memory (bytes) snapshot=4605030400
+		Virtual memory (bytes) snapshot=39794712576
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=632299520
+		Peak Map Virtual memory (bytes)=4969123840
+		Peak Reduce Physical memory (bytes)=494641152
+		Peak Reduce Virtual memory (bytes)=5030739968
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=151047
+	File Output Format Counters 
+		Bytes Written=311
+2025-11-18 02:11:18,187 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/profile_rates
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_vix[27m
+[7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_profile_vix" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/profile_vix \[27m
+[7m  -file   yfinance_profile_mapper.py \[27m
+[7m  -file   yfinance_profile_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_profile_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_profile_reducer.py"[27m[A[A[A[A[A[A[A[Ahdfs dfs -rm -r -f /user/$USER/rbda/yfinance/profile_vix
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_vix" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \
+  -output /user/$USER/rbda/yfinance/profile_vix \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+[?2004l2025-11-18 02:13:04,586 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_profile_mapper.py, yfinance_profile_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob743518673040884439.jar tmpDir=null
+2025-11-18 02:13:05,575 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:13:05,768 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:13:06,620 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:13:06,621 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:13:06,908 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13535
+2025-11-18 02:13:07,335 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:13:07,391 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:13:07,584 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13535
+2025-11-18 02:13:07,584 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:13:07,798 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:13:07,798 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:13:07,878 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13535
+2025-11-18 02:13:07,915 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13535/
+2025-11-18 02:13:07,917 INFO mapreduce.Job: Running job: job_1756163132607_13535
+2025-11-18 02:13:17,039 INFO mapreduce.Job: Job job_1756163132607_13535 running in uber mode : false
+2025-11-18 02:13:17,040 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:13:28,180 INFO mapreduce.Job:  map 83% reduce 0%
+2025-11-18 02:13:29,187 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:13:35,224 INFO mapreduce.Job:  map 100% reduce 50%
+2025-11-18 02:13:36,230 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:13:37,244 INFO mapreduce.Job: Job job_1756163132607_13535 completed successfully
+2025-11-18 02:13:37,351 INFO mapreduce.Job: Counters: 54
+	File System Counters
+		FILE: Number of bytes read=53574
+		FILE: Number of bytes written=2451794
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=148471
+		HDFS: Number of bytes written=317
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Launched map tasks=6
+		Launched reduce tasks=2
+		Data-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=219272
+		Total time spent by all reduces in occupied slots (ms)=34708
+		Total time spent by all map tasks (ms)=54818
+		Total time spent by all reduce tasks (ms)=8677
+		Total vcore-milliseconds taken by all map tasks=54818
+		Total vcore-milliseconds taken by all reduce tasks=8677
+		Total megabyte-milliseconds taken by all map tasks=224534528
+		Total megabyte-milliseconds taken by all reduce tasks=35540992
+	Map-Reduce Framework
+		Map input records=1001
+		Map output records=162
+		Map output bytes=52914
+		Map output materialized bytes=53634
+		Input split bytes=774
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=1
+		Reduce shuffle bytes=53634
+		Reduce input records=162
+		Reduce output records=1
+		Spilled Records=324
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=845
+		CPU time spent (ms)=9550
+		Physical memory (bytes) snapshot=5057769472
+		Virtual memory (bytes) snapshot=40104603648
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=703684608
+		Peak Map Virtual memory (bytes)=5020594176
+		Peak Reduce Physical memory (bytes)=483352576
+		Peak Reduce Virtual memory (bytes)=5102137344
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=147697
+	File Output Format Counters 
+		Bytes Written=317
+2025-11-18 02:13:37,351 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/profile_vix
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -cat /user/$USER/rbda/yfinance/profile_equity/part-* | head -n 20[27m
+[7mhdfs dfs -cat /user/$USER/rbda/yfinance/profile_rates/part-*  | head -n 20[27m
+[7mhdfs dfs -cat /user/$USER/rbda/yfinance/profile_vix/part-*    | head -n 20[27m
+[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chdfs dfs -cat /user/$USER/rbda/yfinance/profile_equity/part-* | head -n 20
+hdfs dfs -cat /user/$USER/rbda/yfinance/profile_rates/part-*  | head -n 20
+hdfs dfs -cat /user/$USER/rbda/yfinance/profile_vix/part-*    | head -n 20
+[A
+[?2004lXLE	{"row_count":500,"first_date":"2023-11-20","last_date":"2025-11-17","value":{"non_null":500,"avg":88.3581,"min":76.44000244140625,"max":98.08000183105469},"volume":{"non_null":500,"avg":15875207.058,"min":6818200.0,"max":59481200.0},"series_labels":{"energy_etf":500},"value_sources":{"close":500},"missing_fields":{}}
+XLF	{"row_count":342,"first_date":"2023-11-20","last_date":"2025-04-02","value":{"non_null":342,"avg":43.913012,"min":35.130001068115234,"max":52.189998626708984},"volume":{"non_null":342,"avg":41667207.894737,"min":13168500.0,"max":153473400.0},"series_labels":{"financials_etf":342},"value_sources":{"close":342},"missing_fields":{}}
+ZQ=F	{"row_count":419,"first_date":"2023-11-20","last_date":"2025-07-21","value":{"non_null":419,"avg":95.111557,"min":94.6675033569336,"max":95.70500183105469},"volume":{"non_null":0,"avg":null,"min":null,"max":null},"series_labels":{"fed_funds_futures":419},"value_sources":{"value":419},"missing_fields":{}}
+^VIX	{"row_count":162,"first_date":"2023-11-20","last_date":"2024-07-15","value":{"non_null":162,"avg":13.596173,"min":11.859999656677246,"max":19.229999542236328},"volume":{"non_null":162,"avg":0.0,"min":0.0,"max":0.0},"series_labels":{"cboe_volatility_index":162},"value_sources":{"close":162},"missing_fields":{}}
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_equity[27m
+[7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_clean_equity" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/clean_equity \[27m
+[7m  -file   yfinance_clean_mapper.py \[27m
+[7m  -file   yfinance_clean_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_clean_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_clean_reducer.py"[27m[A[A[A[A[A[A[A[Ahdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_equity
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/clean_equity \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+[?2004l2025-11-18 02:15:16,261 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_clean_mapper.py, yfinance_clean_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob447646122643747971.jar tmpDir=null
+2025-11-18 02:15:17,308 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:15:17,518 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:15:18,365 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:15:18,366 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:15:18,619 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13536
+2025-11-18 02:15:19,036 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:15:19,097 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:15:19,277 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13536
+2025-11-18 02:15:19,277 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:15:19,485 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:15:19,486 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:15:19,592 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13536
+2025-11-18 02:15:19,630 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13536/
+2025-11-18 02:15:19,632 INFO mapreduce.Job: Running job: job_1756163132607_13536
+2025-11-18 02:15:28,786 INFO mapreduce.Job: Job job_1756163132607_13536 running in uber mode : false
+2025-11-18 02:15:28,787 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:15:40,944 INFO mapreduce.Job:  map 67% reduce 0%
+2025-11-18 02:15:41,950 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:15:48,993 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:15:50,014 INFO mapreduce.Job: Job job_1756163132607_13536 completed successfully
+2025-11-18 02:15:50,124 INFO mapreduce.Job: Counters: 54
+	File System Counters
+		FILE: Number of bytes read=268083
+		FILE: Number of bytes written=2880724
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=649383
+		HDFS: Number of bytes written=99451
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Launched map tasks=6
+		Launched reduce tasks=2
+		Data-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=235900
+		Total time spent by all reduces in occupied slots (ms)=39252
+		Total time spent by all map tasks (ms)=58975
+		Total time spent by all reduce tasks (ms)=9813
+		Total vcore-milliseconds taken by all map tasks=58975
+		Total vcore-milliseconds taken by all reduce tasks=9813
+		Total megabyte-milliseconds taken by all map tasks=241561600
+		Total megabyte-milliseconds taken by all reduce tasks=40194048
+	Map-Reduce Framework
+		Map input records=5001
+		Map output records=842
+		Map output bytes=264707
+		Map output materialized bytes=268143
+		Input split bytes=792
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=842
+		Reduce shuffle bytes=268143
+		Reduce input records=842
+		Reduce output records=844
+		Spilled Records=1684
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=705
+		CPU time spent (ms)=14540
+		Physical memory (bytes) snapshot=4955656192
+		Virtual memory (bytes) snapshot=39996780544
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=709984256
+		Peak Map Virtual memory (bytes)=5008330752
+		Peak Reduce Physical memory (bytes)=467304448
+		Peak Reduce Virtual memory (bytes)=5019279360
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=648591
+	File Output Format Counters 
+		Bytes Written=99451
+2025-11-18 02:15:50,124 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/clean_equity
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_rates[27m
+[7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_clean_rates" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/clean_rates \[27m
+[7m  -file   yfinance_clean_mapper.py \[27m
+[7m  -file   yfinance_clean_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_clean_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_clean_reducer.py"[27m[A[A[A[A[A[A[A[Ahdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_rates
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_rates" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \
+  -output /user/$USER/rbda/yfinance/clean_rates \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+[?2004l2025-11-18 02:16:00,700 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_clean_mapper.py, yfinance_clean_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob8607952362862155089.jar tmpDir=null
+2025-11-18 02:16:01,721 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:16:01,910 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:16:02,759 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:16:02,760 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:16:03,029 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13537
+2025-11-18 02:16:03,440 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:16:03,497 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:16:03,706 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13537
+2025-11-18 02:16:03,706 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:16:03,912 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:16:03,912 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:16:03,989 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13537
+2025-11-18 02:16:04,026 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13537/
+2025-11-18 02:16:04,028 INFO mapreduce.Job: Running job: job_1756163132607_13537
+2025-11-18 02:16:13,158 INFO mapreduce.Job: Job job_1756163132607_13537 running in uber mode : false
+2025-11-18 02:16:13,160 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:16:25,312 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:16:32,354 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:16:33,368 INFO mapreduce.Job: Job job_1756163132607_13537 completed successfully
+2025-11-18 02:16:33,473 INFO mapreduce.Job: Counters: 54
+	File System Counters
+		FILE: Number of bytes read=108478
+		FILE: Number of bytes written=2561490
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=151833
+		HDFS: Number of bytes written=25739
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Launched map tasks=6
+		Launched reduce tasks=2
+		Rack-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=222652
+		Total time spent by all reduces in occupied slots (ms)=37260
+		Total time spent by all map tasks (ms)=55663
+		Total time spent by all reduce tasks (ms)=9315
+		Total vcore-milliseconds taken by all map tasks=55663
+		Total vcore-milliseconds taken by all reduce tasks=9315
+		Total megabyte-milliseconds taken by all map tasks=227995648
+		Total megabyte-milliseconds taken by all reduce tasks=38154240
+	Map-Reduce Framework
+		Map input records=2504
+		Map output records=419
+		Map output bytes=107209
+		Map output materialized bytes=108538
+		Input split bytes=786
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=419
+		Reduce shuffle bytes=108538
+		Reduce input records=419
+		Reduce output records=421
+		Spilled Records=838
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=778
+		CPU time spent (ms)=10460
+		Physical memory (bytes) snapshot=5065940992
+		Virtual memory (bytes) snapshot=40022065152
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=723877888
+		Peak Map Virtual memory (bytes)=5014212608
+		Peak Reduce Physical memory (bytes)=474591232
+		Peak Reduce Virtual memory (bytes)=5012910080
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=151047
+	File Output Format Counters 
+		Bytes Written=25739
+2025-11-18 02:16:33,473 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/clean_rates
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_vix[27m
+[7mhadoop jar /usr/lib/hadoop/hadoop-streaming.jar \[27m
+[7m  -D mapreduce.job.name="yf_clean_vix" \[27m
+[7m  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \[27m
+[7m  -output /user/$USER/rbda/yfinance/clean_vix \[27m
+[7m  -file   yfinance_clean_mapper.py \[27m
+[7m  -file   yfinance_clean_reducer.py \[27m
+[7m  -mapper  "python3 yfinance_clean_mapper.py" \[27m
+[7m  -reducer "python3 yfinance_clean_reducer.py"[27m[A[A[A[A[A[A[A[Ahdfs dfs -rm -r -f /user/$USER/rbda/yfinance/clean_vix
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_vix" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \
+  -output /user/$USER/rbda/yfinance/clean_vix \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+[?2004l2025-11-18 02:16:46,605 WARN streaming.StreamJob: -file option is deprecated, please use generic option -files instead.
+packageJobJar: [yfinance_clean_mapper.py, yfinance_clean_reducer.py] [/usr/lib/hadoop/hadoop-streaming-3.3.6.jar] /tmp/streamjob17202130591045850943.jar tmpDir=null
+2025-11-18 02:16:47,579 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:16:47,778 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:16:48,593 INFO client.DefaultNoHARMFailoverProxyProvider: Connecting to ResourceManager at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:8032
+2025-11-18 02:16:48,594 INFO client.AHSProxy: Connecting to Application History server at nyu-dataproc-m.c.hpc-dataproc-19b8.internal./192.168.1.31:10200
+2025-11-18 02:16:48,864 INFO mapreduce.JobResourceUploader: Disabling Erasure Coding for path: /tmp/hadoop-yarn/staging/jc10691_nyu_edu/.staging/job_1756163132607_13538
+2025-11-18 02:16:49,292 INFO mapred.FileInputFormat: Total input files to process : 1
+2025-11-18 02:16:49,352 INFO mapreduce.JobSubmitter: number of splits:6
+2025-11-18 02:16:49,531 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1756163132607_13538
+2025-11-18 02:16:49,531 INFO mapreduce.JobSubmitter: Executing with tokens: []
+2025-11-18 02:16:49,741 INFO conf.Configuration: resource-types.xml not found
+2025-11-18 02:16:49,742 INFO resource.ResourceUtils: Unable to find 'resource-types.xml'.
+2025-11-18 02:16:49,808 INFO impl.YarnClientImpl: Submitted application application_1756163132607_13538
+2025-11-18 02:16:49,844 INFO mapreduce.Job: The url to track the job: http://nyu-dataproc-m.c.hpc-dataproc-19b8.internal.:8088/proxy/application_1756163132607_13538/
+2025-11-18 02:16:49,845 INFO mapreduce.Job: Running job: job_1756163132607_13538
+2025-11-18 02:16:59,960 INFO mapreduce.Job: Job job_1756163132607_13538 running in uber mode : false
+2025-11-18 02:16:59,961 INFO mapreduce.Job:  map 0% reduce 0%
+2025-11-18 02:17:11,094 INFO mapreduce.Job:  map 100% reduce 0%
+2025-11-18 02:17:18,137 INFO mapreduce.Job:  map 100% reduce 100%
+2025-11-18 02:17:19,151 INFO mapreduce.Job: Job job_1756163132607_13538 completed successfully
+2025-11-18 02:17:19,255 INFO mapreduce.Job: Counters: 54
+	File System Counters
+		FILE: Number of bytes read=54391
+		FILE: Number of bytes written=2453268
+		FILE: Number of read operations=0
+		FILE: Number of large read operations=0
+		FILE: Number of write operations=0
+		HDFS: Number of bytes read=148471
+		HDFS: Number of bytes written=19815
+		HDFS: Number of read operations=28
+		HDFS: Number of large read operations=0
+		HDFS: Number of write operations=6
+		HDFS: Number of bytes read erasure-coded=0
+	Job Counters 
+		Launched map tasks=6
+		Launched reduce tasks=2
+		Rack-local map tasks=6
+		Total time spent by all maps in occupied slots (ms)=226808
+		Total time spent by all reduces in occupied slots (ms)=35632
+		Total time spent by all map tasks (ms)=56702
+		Total time spent by all reduce tasks (ms)=8908
+		Total vcore-milliseconds taken by all map tasks=56702
+		Total vcore-milliseconds taken by all reduce tasks=8908
+		Total megabyte-milliseconds taken by all map tasks=232251392
+		Total megabyte-milliseconds taken by all reduce tasks=36487168
+	Map-Reduce Framework
+		Map input records=1001
+		Map output records=162
+		Map output bytes=53735
+		Map output materialized bytes=54451
+		Input split bytes=774
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=162
+		Reduce shuffle bytes=54451
+		Reduce input records=162
+		Reduce output records=164
+		Spilled Records=324
+		Shuffled Maps =12
+		Failed Shuffles=0
+		Merged Map outputs=12
+		GC time elapsed (ms)=690
+		CPU time spent (ms)=10700
+		Physical memory (bytes) snapshot=5082284032
+		Virtual memory (bytes) snapshot=40092340224
+		Total committed heap usage (bytes)=7902068736
+		Peak Map Physical memory (bytes)=752586752
+		Peak Map Virtual memory (bytes)=5011005440
+		Peak Reduce Physical memory (bytes)=493604864
+		Peak Reduce Virtual memory (bytes)=5097639936
+	Shuffle Errors
+		BAD_ID=0
+		CONNECTION=0
+		IO_ERROR=0
+		WRONG_LENGTH=0
+		WRONG_MAP=0
+		WRONG_REDUCE=0
+	File Input Format Counters 
+		Bytes Read=147697
+	File Output Format Counters 
+		Bytes Written=19815
+2025-11-18 02:17:19,256 INFO streaming.StreamJob: Output directory: /user/jc10691_nyu_edu/rbda/yfinance/clean_vix
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ [7mhdfs dfs -cat /user/$USER/rbda/yfinance/clean_equity/part-* | head -n 20[27m
+[7mhdfs dfs -cat /user/$USER/rbda/yfinance/clean_rates/part-*  | head -n 20[27m
+[7mhdfs dfs -cat /user/$USER/rbda/yfinance/clean_vix/part-*    | head -n 20[27m
+
+[7mhdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_equity cleaned_yfinance_equity.csv[27m
+[7mhdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_rates  cleaned_yfinance_rates.csv[27m
+[7mhdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_vix    cleaned_yfinance_vix.csv[27m
+[A[A[A[A[A[A[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Chdfs dfs -cat /user/$USER/rbda/yfinance/clean_equity/part-* | head -n 20
+hdfs dfs -cat /user/$USER/rbda/yfinance/clean_rates/part-*  | head -n 20
+hdfs dfs -cat /user/$USER/rbda/yfinance/clean_vix/part-*    | head -n 20
+
+hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_equity cleaned_yfinance_equity.csv
+hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_rates  cleaned_yfinance_rates.csv
+hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_vix    cleaned_yfinance_vix.csv
+[A
+[?2004ldate,ticker,series_label,dataset_type,value,open,high,low,close,adj_close,volume,quality_notes	
+2023-11-21,XLE,energy_etf,equity,84.62000275,84.41000366,84.76999664,83.80999756,84.62000275,79.17155457,13486900,ok	
+2023-11-27,XLE,energy_etf,equity,84.62999725,84.48999786,84.77999878,83.83999634,84.62999725,79.1809082,12250900,ok	
+2023-11-29,XLE,energy_etf,equity,84.01999664,85.18000031,85.29000092,83.75,84.01999664,78.61019897,22634000,ok	
+2023-11-30,XLE,energy_etf,equity,84.58000183,84.73999786,85.79000092,83.56999969,84.58000183,79.13414764,29182300,ok	
+2023-12-04,XLE,energy_etf,equity,84.62999725,84.40000153,85.16000366,84.01000214,84.62999725,79.1809082,18535100,ok	
+2023-12-06,XLE,energy_etf,equity,81.91000366,82.61000061,83.19000244,81.58999634,81.91000366,76.63605499,31153300,ok	
+2023-12-08,XLE,energy_etf,equity,82.23000336,81.88999939,82.48000336,81.72000122,82.23000336,76.93545532,17063600,ok	
+2023-12-11,XLE,energy_etf,equity,82.33000183,82.30000305,82.59999847,81.91999817,82.33000183,77.02901459,14672100,ok	
+2023-12-13,XLE,energy_etf,equity,82.33000183,81.25,82.36000061,80.87000275,82.33000183,77.02901459,23222800,ok	
+2023-12-15,XLE,energy_etf,equity,84.30000305,83.98999786,84.45999908,83.59999847,84.30000305,78.87216949,23183200,ok	
+2023-12-19,XLE,energy_etf,equity,85.19000244,84.33999634,85.27999878,84.15000153,85.19000244,80.47044373,18431200,ok	
+2023-12-20,XLE,energy_etf,equity,84.40000153,85.48999786,85.98999786,84.30000305,84.40000153,79.72419739,19909100,ok	
+2023-12-22,XLE,energy_etf,equity,84.98000336,85.33999634,85.72000122,84.84999847,84.98000336,80.27205658,12518900,ok	
+2023-12-26,XLE,energy_etf,equity,85.70999908,85.69999695,86.16999817,85.44000244,85.70999908,80.96162415,12991700,ok	
+2023-12-28,XLE,energy_etf,equity,84.02999878,84.88999939,85.22000122,84,84.02999878,79.37469482,13099000,ok	
+2024-01-03,XLE,energy_etf,equity,86.12000275,84.87000275,86.43000031,84.44000244,86.12000275,81.34889984,18968000,ok	
+2024-01-05,XLE,energy_etf,equity,84.68000031,85.41999817,85.45999908,84.29000092,84.68000031,79.98868561,17014600,ok	
+2024-01-09,XLE,energy_etf,equity,82.36000061,83.80999756,83.90000153,82.18000031,82.36000061,77.79721069,16875200,ok	
+2024-01-10,XLE,energy_etf,equity,81.55000305,82.51999664,82.55000305,81.22000122,81.55000305,77.0320816,16579900,ok	
+cat: Unable to write to output stream.
+cat: Unable to write to output stream.
+date,ticker,series_label,dataset_type,value,open,high,low,close,adj_close,volume,quality_notes	
+2023-11-21,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-11-23,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-11-27,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-11-29,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-11-30,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-04,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-06,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-08,ZQ=F,fed_funds_futures,rate,94.66750336,,,,,,,ok	
+2023-12-11,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-13,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-15,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-19,ZQ=F,fed_funds_futures,rate,94.66750336,,,,,,,ok	
+2023-12-20,ZQ=F,fed_funds_futures,rate,94.66750336,,,,,,,ok	
+2023-12-22,ZQ=F,fed_funds_futures,rate,94.67250061,,,,,,,ok	
+2023-12-26,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2023-12-28,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2024-01-03,ZQ=F,fed_funds_futures,rate,94.67250061,,,,,,,ok	
+2024-01-05,ZQ=F,fed_funds_futures,rate,94.66999817,,,,,,,ok	
+2024-01-09,ZQ=F,fed_funds_futures,rate,94.67250061,,,,,,,ok	
+cat: Unable to write to output stream.
+date,ticker,series_label,dataset_type,value,open,high,low,close,adj_close,volume,quality_notes	
+2023-11-21,^VIX,cboe_volatility_index,equity,13.35000038,13.44999981,14.31000042,13.13000011,13.35000038,13.35000038,0,ok	
+2023-11-27,^VIX,cboe_volatility_index,equity,12.68999958,13.14000034,13.27999973,12.64000034,12.68999958,12.68999958,0,ok	
+2023-11-29,^VIX,cboe_volatility_index,equity,12.97999954,12.71000004,13.10000038,12.47999954,12.97999954,12.97999954,0,ok	
+2023-11-30,^VIX,cboe_volatility_index,equity,12.92000008,13.06999969,13.39000034,12.81999969,12.92000008,12.92000008,0,ok	
+2023-12-04,^VIX,cboe_volatility_index,equity,13.07999992,13.27999973,13.69999981,12.97999954,13.07999992,13.07999992,0,ok	
+2023-12-06,^VIX,cboe_volatility_index,equity,12.97000027,12.77999973,13.02999973,12.64000034,12.97000027,12.97000027,0,ok	
+2023-12-08,^VIX,cboe_volatility_index,equity,12.35000038,13.14000034,13.23999977,12.35000038,12.35000038,12.35000038,0,ok	
+2023-12-11,^VIX,cboe_volatility_index,equity,12.63000011,13.05000019,13.14000034,12.60999966,12.63000011,12.63000011,0,ok	
+2023-12-13,^VIX,cboe_volatility_index,equity,12.18999958,12.19999981,12.46000004,11.81999969,12.18999958,12.18999958,0,ok	
+2023-12-15,^VIX,cboe_volatility_index,equity,12.27999973,12.11999989,12.53999996,12.01000023,12.27999973,12.27999973,0,ok	
+2023-12-19,^VIX,cboe_volatility_index,equity,12.52999973,12.60000038,12.60000038,12.32999992,12.52999973,12.52999973,0,ok	
+2023-12-20,^VIX,cboe_volatility_index,equity,13.67000008,12.63000011,13.93000031,12.28999996,13.67000008,13.67000008,0,ok	
+2023-12-22,^VIX,cboe_volatility_index,equity,13.02999973,13.72000027,13.96000004,13,13.02999973,13.02999973,0,ok	
+2023-12-26,^VIX,cboe_volatility_index,equity,12.98999977,13.77000046,13.80000019,12.96000004,12.98999977,12.98999977,0,ok	
+2023-12-28,^VIX,cboe_volatility_index,equity,12.47000027,12.43999958,12.64999962,12.38000011,12.47000027,12.47000027,0,ok	
+2024-01-03,^VIX,cboe_volatility_index,equity,14.03999996,13.35000038,14.22000027,13.32999992,14.03999996,14.03999996,0,ok	
+2024-01-05,^VIX,cboe_volatility_index,equity,13.35000038,14.23999977,14.57999992,13.28999996,13.35000038,13.35000038,0,ok	
+2024-01-09,^VIX,cboe_volatility_index,equity,12.76000023,13.19999981,13.44999981,12.73999977,12.76000023,12.76000023,0,ok	
+2024-01-10,^VIX,cboe_volatility_index,equity,12.68999958,12.85999966,12.94999981,12.67000008,12.68999958,12.68999958,0,ok	
+cat: Unable to write to output stream.
+[?2004h]0;jc10691_nyu_edu@nyu-dataproc-m: ~[01;32mjc10691_nyu_edu@nyu-dataproc-m[00m:[01;34m~[00m$ exit
+[?2004lexit
+
+Script done on 2025-11-18 02:18:53+00:00 [COMMAND_EXIT_CODE="0"]
