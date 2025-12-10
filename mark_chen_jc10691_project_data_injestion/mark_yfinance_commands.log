@@ -1,0 +1,119 @@
+Script started on 2025-11-18 02:01:47 UTC
+
+$ hdfs dfs -put -f yfinance_equity.csv            /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_rates.csv             /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_vix.csv               /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_10y_treasury_yield.csv /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_5y_treasury_yield.csv   /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_3m_treasury_bill.csv    /user/$USER/rbda/yfinance/raw/
+$ hdfs dfs -put -f yfinance_fed_funds_futures.csv   /user/$USER/rbda/yfinance/raw/
+
+$ hdfs dfs -ls /user/$USER/rbda/yfinance/raw
+Found 7 items
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      63932 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_10y_treasury_yield.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      62296 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_3m_treasury_bill.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      63665 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_5y_treasury_yield.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     628111 2025-11-18 02:01 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_equity.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu      65382 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_fed_funds_futures.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     130567 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_rates.csv
+-rw-r--r--   1 jc10691_nyu_edu jc10691_nyu_edu     127217 2025-11-18 02:02 /user/jc10691_nyu_edu/rbda/yfinance/raw/yfinance_vix.csv
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/profile_equity \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+... (Job job_1756163132607_13533 completed successfully)
+File Output Format Counters 
+        Bytes Written=659
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_rates" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \
+  -output /user/$USER/rbda/yfinance/profile_rates \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+... (Job job_1756163132607_13534 completed successfully)
+File Output Format Counters 
+        Bytes Written=311
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_profile_vix" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \
+  -output /user/$USER/rbda/yfinance/profile_vix \
+  -file   yfinance_profile_mapper.py \
+  -file   yfinance_profile_reducer.py \
+  -mapper  "python3 yfinance_profile_mapper.py" \
+  -reducer "python3 yfinance_profile_reducer.py"
+... (Job job_1756163132607_13535 completed successfully)
+File Output Format Counters 
+        Bytes Written=317
+
+$ hdfs dfs -cat /user/$USER/rbda/yfinance/profile_equity/part-* | head -n 20
+XLE {"row_count":500,"first_date":"2023-11-20","last_date":"2025-11-17",...}
+XLF {"row_count":342,...}
+ZQ=F {"row_count":419,...}
+^VIX {"row_count":162,...}
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_equity" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_equity.csv \
+  -output /user/$USER/rbda/yfinance/clean_equity \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+... (Job job_1756163132607_13536 completed successfully)
+File Output Format Counters 
+        Bytes Written=99451
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_rates" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_rates.csv \
+  -output /user/$USER/rbda/yfinance/clean_rates \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+... (Job job_1756163132607_13537 completed successfully)
+File Output Format Counters 
+        Bytes Written=25739
+
+$ hadoop jar /usr/lib/hadoop/hadoop-streaming.jar \
+  -D mapreduce.job.name="yf_clean_vix" \
+  -input  /user/$USER/rbda/yfinance/raw/yfinance_vix.csv \
+  -output /user/$USER/rbda/yfinance/clean_vix \
+  -file   yfinance_clean_mapper.py \
+  -file   yfinance_clean_reducer.py \
+  -mapper  "python3 yfinance_clean_mapper.py" \
+  -reducer "python3 yfinance_clean_reducer.py"
+... (Job job_1756163132607_13538 completed successfully)
+File Output Format Counters 
+        Bytes Written=19815
+
+$ hdfs dfs -cat /user/$USER/rbda/yfinance/clean_equity/part-* | head -n 20
+(date,ticker,...)
+2023-11-21,XLE,...
+...
+
+$ hdfs dfs -cat /user/$USER/rbda/yfinance/clean_rates/part-* | head -n 20
+(date,ticker,...)
+2023-11-21,ZQ=F,...
+...
+
+$ hdfs dfs -cat /user/$USER/rbda/yfinance/clean_vix/part-* | head -n 20
+(date,ticker,...)
+2023-11-21,^VIX,...
+...
+
+$ hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_equity cleaned_yfinance_equity.csv
+$ hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_rates  cleaned_yfinance_rates.csv
+$ hdfs dfs -getmerge /user/$USER/rbda/yfinance/clean_vix    cleaned_yfinance_vix.csv
+
+$ exit
+Script done.
